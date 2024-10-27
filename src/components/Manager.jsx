@@ -1,6 +1,33 @@
-import React from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 
 const Manager = () => {
+
+  const [form,setform]=useState({site:"",username:"",password:""})
+  
+  const [passwordArray, setPasswordArray] = useState([])
+
+  useEffect(() => {
+    let passwords=localStorage.getItem("passwords")
+
+    if(passwords){
+
+      setPasswordArray(JSON.parse(passwords))
+    }
+  
+    
+  }, [])
+  
+
+  const savepassword = () => {
+    setPasswordArray([...passwordArray,form])
+    localStorage.setItem("passwords",JSON.stringify([...passwordArray,form]))
+    console.log([...passwordArray,form]);
+
+  }
+
+  const handlechange = (e) => {
+    setform({...form,[e.target.name]: e.target.value})
+  }
   return (
 
     <div className="absolute inset-0 -z-10 h-full w-full bg-green-50 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
@@ -18,12 +45,12 @@ const Manager = () => {
         <p className='text-green-900 text-lg text-center'>Your own Password Manager</p>
 
         <div className="flex flex-col p-4 gap-5 items-center">
-          <input placeholder='Enter website URL' type="text" className="rounded-full border border-green-600 w-full p-4 py-1" />
+          <input value={form.site} onChange={handlechange} placeholder='Enter website URL' name='site' type="text" className="rounded-full border border-green-600 w-full p-4 py-1" />
           <div className="flex p-3 gap-5 w-full">
-            <input placeholder='Enter Username' type="text" className="rounded-full border border-green-600 w-full p-4 py-1" />
-            <input placeholder='Enter Password' type="text" className="rounded-full border border-green-600 w-full p-4 py-1" />
+            <input value={form.username} onChange={handlechange} placeholder='Enter Username' name='username' type="text" className="rounded-full border border-green-600 w-full p-4 py-1" />
+            <input value={form.password} onChange={handlechange} placeholder='Enter Password' name='password' type="text" className="rounded-full border border-green-600 w-full p-4 py-1" />
           </div>
-          <button className='flex justify-center items-center bg-green-400 w-fit border border-green-950 rounded-full px-2 hover:bg-green-500'>
+          <button onClick={savepassword} className='flex justify-center items-center bg-green-400 w-fit border border-green-950 rounded-full px-2 hover:bg-green-500'>
             <lord-icon
               src="https://cdn.lordicon.com/sbnjyzil.json"
               trigger="hover"
@@ -34,6 +61,10 @@ const Manager = () => {
           </button>
         </div>
 
+      </div>
+
+      <div className="passwords">
+        
       </div>
     </div>
   )
